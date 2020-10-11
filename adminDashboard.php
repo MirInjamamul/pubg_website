@@ -54,6 +54,12 @@
             </a>
           </li>
           <li class="nav-item ">
+            <a class="nav-link" href="./registeredUserList.php">
+              <i class="material-icons">groups</i>
+              <p>Registered User List</p>
+            </a>
+          </li>
+          <li class="nav-item ">
             <a class="nav-link" href="./typography.html">
               <i class="material-icons">library_books</i>
               <p>Typography</p>
