@@ -161,8 +161,8 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav nav-main">
-						<li class="active"><a href="index.html">HOME</a></li>
-						<li class=""><a href="topup.php">TOP-UP</a></li>
+                    <li class=""><a href="index.html">HOME</a></li>
+						<li class="active"><a href="topup.php">TOP-UP</a></li>
 						<li><a href="#">SHOP</a></li>
 						<li><a href="#">CUSTOM PRACTICE</a></li>
 						<li><a href="#">LEADERBOARD</a></li>
@@ -171,28 +171,6 @@
 			</div>	<!-- /.navbar-collapse -->
 	</div>	<!-- /.container-fluid -->
 </nav>	<!-- End of /.nav -->
-
-
-	<!-- SLIDER Start
-    ================================================== -->
-
-
-	<section id="slider-area">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					<div id="slider" class="nivoSlider">
-				    	<img src="index_assets/images/slider/slider1.jpg" alt="" />
-				    	<img src="index_assets/images/slider/slider2.jpg" alt=""/>
-						<img src="index_assets/images/slider/slider3.jpg" alt="" />
-						<img src="index_assets/images/slider/slider4.jpg" alt="" />
-						<img src="index_assets/images/slider/slider5.jpg" alt="" />
-					</div>	<!-- End of /.nivoslider -->
-				</div>	<!-- End of /.col-md-12 -->
-			</div>	<!-- End of /.row -->
-		</div>	<!-- End of /.container -->
-	</section> <!-- End of Section -->
-
 
 
 	<!-- FEATURES Start
@@ -221,7 +199,7 @@
 						</div>
 						<div class="row">
 
-						  	<div class="col-sm-6 col-md-4">
+						<div class="col-sm-6 col-md-4">
 							    <div class="thumbnail">
 							    	<a class="catagotie-head" href="topup/freefire.php">
 										<img src="index_assets/images/icons/free_fire_icon.jpg" alt="...">
@@ -254,29 +232,8 @@
 										<h3>Clash of Clan</h3>
 									</a>
 							    </div>	<!-- End of /.thumbnail -->
-						  	</div>	<!-- End of /.col-sm-6 col-md-4 -->
-						</div>	<!-- End of /.row -->
-					</div>	<!-- End of /.block -->
-				</div>	<!-- End of /.col-md-12 -->
-
-				<div class="col-md-12">
-					<div class="block">
-						<div class="block-heading">
-							<h2>Special Deal</h2>
-						</div>
-						<div class="row">							
-							
-						</div>	<!-- End of /.row -->
-					</div>	<!-- End of /.block -->
-				</div>	<!-- End of /.col-md-12 -->
-
-				<div class="col-md-12">
-					<div class="block">
-						<div class="block-heading">
-							<h2>News And Promotions</h2>
-						</div>
-						<div class="row">
-
+							  </div>	<!-- End of /.col-sm-6 col-md-4 -->
+							  
 						</div>	<!-- End of /.row -->
 					</div>	<!-- End of /.block -->
 				</div>	<!-- End of /.col-md-12 -->

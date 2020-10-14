@@ -1,31 +1,81 @@
+<?php
+session_start();
+require_once("dbcontroller.php");
+$db_handle = new DBController();
+if(!empty($_GET["action"])) {
+switch($_GET["action"]) {
+	case "add":
+		if(!empty($_POST["quantity"])) {
+			$productByCode = $db_handle->runQuery("SELECT * FROM tblproduct WHERE code='" . $_GET["code"] . "'");
+			$itemArray = array($productByCode[0]["code"]=>array('name'=>$productByCode[0]["name"], 'code'=>$productByCode[0]["code"], 'quantity'=>$_POST["quantity"], 'price'=>$productByCode[0]["price"], 'image'=>$productByCode[0]["image"]));
+			
+			if(!empty($_SESSION["cart_item"])) {
+				if(in_array($productByCode[0]["code"],array_keys($_SESSION["cart_item"]))) {
+					foreach($_SESSION["cart_item"] as $k => $v) {
+							if($productByCode[0]["code"] == $k) {
+								if(empty($_SESSION["cart_item"][$k]["quantity"])) {
+									$_SESSION["cart_item"][$k]["quantity"] = 0;
+								}
+								$_SESSION["cart_item"][$k]["quantity"] += $_POST["quantity"];
+							}
+					}
+				} else {
+					$_SESSION["cart_item"] = array_merge($_SESSION["cart_item"],$itemArray);
+				}
+			} else {
+				$_SESSION["cart_item"] = $itemArray;
+			}
+		}
+	break;
+	case "remove":
+		if(!empty($_SESSION["cart_item"])) {
+			foreach($_SESSION["cart_item"] as $k => $v) {
+					if($_GET["code"] == $k)
+						unset($_SESSION["cart_item"][$k]);				
+					if(empty($_SESSION["cart_item"]))
+						unset($_SESSION["cart_item"]);
+			}
+		}
+	break;
+	case "empty":
+		unset($_SESSION["cart_item"]);
+	break;	
+}
+}
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<title>Welcome | GoGarena</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+    <link href="shopping_assets/style.css" type="text/css" rel="stylesheet" />
 
 	<!-- Fonts -->
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700' rel='stylesheet' type='text/css'>
 
 	<!-- Css -->
-	<link rel="stylesheet" href="index_assets/css/nivo-slider.css" type="text/css" />
-	<link rel="stylesheet" href="index_assets/css/owl.carousel.css">
-	<link rel="stylesheet" href="index_assets/css/owl.theme.css">
-	<link rel="stylesheet" href="index_assets/css/bootstrap.min.css">
-	<link rel="stylesheet" href="index_assets/css/font-awesome.min.css">
-	<link rel="stylesheet" href="index_assets/css/style.css">
-	<link rel="stylesheet" href="index_assets/css/responsive.css">
+	<link rel="stylesheet" href="../index_assets/css/nivo-slider.css" type="text/css" />
+	<link rel="stylesheet" href="../index_assets/css/owl.carousel.css">
+	<link rel="stylesheet" href="./index_assets/css/owl.theme.css">
+	<link rel="stylesheet" href="../index_assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../index_assets/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../index_assets/css/style.css">
+    <link rel="stylesheet" href="../index_assets/css/responsive.css">
+    
+    
 
 	<!-- jS -->
-	<script src="index_assets/js/jquery.min.js" type="text/javascript"></script>
-	<script src="index_assets/js/bootstrap.min.js" type="text/javascript"></script>
-	<script src="index_assets/js/jquery.nivo.slider.js" type="text/javascript"></script>
-	<script src="index_assets/js/owl.carousel.min.js" type="text/javascript"></script>
-	<script src="index_assets/js/jquery.nicescroll.js"></script>
-	<script src="index_assets/js/jquery.scrollUp.min.js"></script>
-	<script src="index_assets/js/main.js" type="text/javascript"></script>
+	<script src="../index_assets/js/jquery.min.js" type="text/javascript"></script>
+	<script src="../index_assets/js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="../index_assets/js/jquery.nivo.slider.js" type="text/javascript"></script>
+	<script src="../index_assets/js/owl.carousel.min.js" type="text/javascript"></script>
+	<script src="../index_assets/js/jquery.nicescroll.js"></script>
+	<script src="../index_assets/js/jquery.scrollUp.min.js"></script>
+	<script src="../index_assets/js/main.js" type="text/javascript"></script>
 
 
 </head>
@@ -46,7 +96,7 @@
 						<li>
 							<a href="login.php">
 								<!--	<i class="fa fa-user"></i> -->
-								<img src="index_assets/images/icons/LoginImage.png">  Login
+								<img src="../index_assets/images/icons/LoginImage.png">  Login
 							</a>
 						</li>
 					</ul>
@@ -161,8 +211,8 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav nav-main">
-						<li class="active"><a href="index.html">HOME</a></li>
-						<li class=""><a href="topup.php">TOP-UP</a></li>
+                    <li class=""><a href="index.html">HOME</a></li>
+						<li class="active"><a href="topup.php">TOP-UP</a></li>
 						<li><a href="#">SHOP</a></li>
 						<li><a href="#">CUSTOM PRACTICE</a></li>
 						<li><a href="#">LEADERBOARD</a></li>
@@ -171,28 +221,6 @@
 			</div>	<!-- /.navbar-collapse -->
 	</div>	<!-- /.container-fluid -->
 </nav>	<!-- End of /.nav -->
-
-
-	<!-- SLIDER Start
-    ================================================== -->
-
-
-	<section id="slider-area">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					<div id="slider" class="nivoSlider">
-				    	<img src="index_assets/images/slider/slider1.jpg" alt="" />
-				    	<img src="index_assets/images/slider/slider2.jpg" alt=""/>
-						<img src="index_assets/images/slider/slider3.jpg" alt="" />
-						<img src="index_assets/images/slider/slider4.jpg" alt="" />
-						<img src="index_assets/images/slider/slider5.jpg" alt="" />
-					</div>	<!-- End of /.nivoslider -->
-				</div>	<!-- End of /.col-md-12 -->
-			</div>	<!-- End of /.row -->
-		</div>	<!-- End of /.container -->
-	</section> <!-- End of Section -->
-
 
 
 	<!-- FEATURES Start
@@ -214,72 +242,82 @@
 	<section id="catagorie">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-12">
-					<div class="block">
-						<div class="block-heading">
-							<h2>Game Top UP</h2>
-						</div>
-						<div class="row">
+                <div id="shopping-cart">
+                    <div class="txt-heading">Shopping Cart</div>
 
-						  	<div class="col-sm-6 col-md-4">
-							    <div class="thumbnail">
-							    	<a class="catagotie-head" href="topup/freefire.php">
-										<img src="index_assets/images/icons/free_fire_icon.jpg" alt="...">
-										<h3>Free Fire</h3>
-									</a>
-							    </div>	<!-- End of /.thumbnail -->
-						  	</div>	<!-- End of /.col-sm-6 col-md-4 -->
+                    <a id="btnEmpty" href="pubg.php?action=empty">Empty Cart</a>
+                    <?php
+                        if(isset($_SESSION["cart_item"])){
+                            $total_quantity = 0;
+                            $total_price = 0;
+                    ?>	
+                    <table class="tbl-cart" cellpadding="10" cellspacing="1">
+                        <tbody>
+                            <tr>
+                            <th style="text-align:left;">Name</th>
+                            <th style="text-align:left;">Code</th>
+                            <th style="text-align:right;" width="5%">Quantity</th>
+                            <th style="text-align:right;" width="10%">Unit Price</th>
+                            <th style="text-align:right;" width="10%">Price</th>
+                            <th style="text-align:center;" width="5%">Remove</th>
+                            </tr>	
+                    <?php		
+                        foreach ($_SESSION["cart_item"] as $item){
+                            $item_price = $item["quantity"]*$item["price"];
+                            ?>
+                                    <tr>
+                                    <td><img src="<?php echo $item["image"]; ?>" class="cart-item-image" /><?php echo $item["name"]; ?></td>
+                                    <td><?php echo $item["code"]; ?></td>
+                                    <td style="text-align:right;"><?php echo $item["quantity"]; ?></td>
+                                    <td  style="text-align:right;"><?php echo "$ ".$item["price"]; ?></td>
+                                    <td  style="text-align:right;"><?php echo "$ ". number_format($item_price,2); ?></td>
+                                    <td style="text-align:center;"><a href="pubg.php?action=remove&code=<?php echo $item["code"]; ?>" class="btnRemoveAction"><img src="icon-delete.png" alt="Remove Item" /></a></td>
+                                    </tr>
+                                    <?php
+                                    $total_quantity += $item["quantity"];
+                                    $total_price += ($item["price"]*$item["quantity"]);
+                            }
+                            ?>
 
-						  	<div class="col-sm-6 col-md-4">
-							    <div class="thumbnail">
-							    	<a class="catagotie-head" href="topup/pubg.php">
-										<img src="index_assets/images/icons/pubg_icon.jpg" alt="...">
-										<h3>PUBG</h3>
-									</a>
-							    </div>	<!-- End of /.thumbnail -->
-						  	</div>	<!-- End of /.col-sm-6 col-md-4 -->
+                    <tr>
+                    <td colspan="2" align="right">Total:</td>
+                    <td align="right"><?php echo $total_quantity; ?></td>
+                    <td align="right" colspan="2"><strong><?php echo "$ ".number_format($total_price, 2); ?></strong></td>
+                    <td></td>
+                    </tr>
+                    </tbody>
+                    </table>		
+                    <?php
+                    } else {
+                    ?>
+                    <div class="no-records">Your Cart is Empty</div>
+                    <?php 
+                    }
+                    ?>
+                    </div>
 
-								<div class="col-sm-6 col-md-4">
-							    <div class="thumbnail">
-							    	<a class="catagotie-head" href="topup/codMobile.php">
-										<img src="index_assets/images/icons/cod_icon.jpg" alt="...">
-										<h3>Call of Duty</h3>
-									</a>
-							    </div>	<!-- End of /.thumbnail -->
-						  	</div>	<!-- End of /.col-sm-6 col-md-4 -->
-							<div class="col-sm-6 col-md-4">
-							    <div class="thumbnail">
-							    	<a class="catagotie-head" href="topup/coc.php">
-										<img src="index_assets/images/icons/coc_icon.jpg" alt="...">
-										<h3>Clash of Clan</h3>
-									</a>
-							    </div>	<!-- End of /.thumbnail -->
-						  	</div>	<!-- End of /.col-sm-6 col-md-4 -->
-						</div>	<!-- End of /.row -->
-					</div>	<!-- End of /.block -->
-				</div>	<!-- End of /.col-md-12 -->
-
-				<div class="col-md-12">
-					<div class="block">
-						<div class="block-heading">
-							<h2>Special Deal</h2>
-						</div>
-						<div class="row">							
-							
-						</div>	<!-- End of /.row -->
-					</div>	<!-- End of /.block -->
-				</div>	<!-- End of /.col-md-12 -->
-
-				<div class="col-md-12">
-					<div class="block">
-						<div class="block-heading">
-							<h2>News And Promotions</h2>
-						</div>
-						<div class="row">
-
-						</div>	<!-- End of /.row -->
-					</div>	<!-- End of /.block -->
-				</div>	<!-- End of /.col-md-12 -->
+                    <div id="product-grid">
+                        <div class="txt-heading">Products</div>
+                        <?php
+                        $product_array = $db_handle->runQuery("SELECT * FROM tblproduct WHERE code = 'pubg' ORDER BY id ASC");
+                        if (!empty($product_array)) { 
+                            foreach($product_array as $key=>$value){
+                        ?>
+                            <div class="product-item">
+                                <form method="post" action="pubg.php?action=add&code=<?php echo $product_array[$key]["code"]; ?>">
+                                <div class="product-image"><img src="<?php echo $product_array[$key]["image"]; ?>"></div>
+                                <div class="product-tile-footer">
+                                <div class="product-title"><?php echo $product_array[$key]["name"]; ?></div>
+                                <div class="product-price"><?php echo "$".$product_array[$key]["price"]; ?></div>
+                                <div class="cart-action"><input type="text" class="product-quantity" name="quantity" value="1" size="2" /><input type="submit" value="Add to Cart" class="btnAddAction" /></div>
+                                </div>
+                                </form>
+                            </div>
+                        <?php
+                            }
+                        }
+                        ?>
+                    </div>
 			</div>	<!-- End of /.row -->
 		</div>	<!-- End of /.container -->
 	</section>	<!-- End of Section -->
