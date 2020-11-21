@@ -203,7 +203,25 @@
 							    <div class="thumbnail">
 							    	<a class="catagotie-head" href="topup/freefire.php">
 										<img src="index_assets/images/icons/free_fire_icon.jpg" alt="...">
-										<h3>Free Fire</h3>
+										<h3>Free Fire (IN GAME)</h3>
+									</a>
+							    </div>	<!-- End of /.thumbnail -->
+							  </div>	<!-- End of /.col-sm-6 col-md-4 -->
+							  
+							  <div class="col-sm-6 col-md-4">
+							    <div class="thumbnail">
+							    	<a class="catagotie-head" href="topup/freefire.php">
+										<img src="index_assets/images/icons/free_fire_icon.jpg" alt="...">
+										<h3>Free Fire (PROMO)</h3>
+									</a>
+							    </div>	<!-- End of /.thumbnail -->
+							  </div>	<!-- End of /.col-sm-6 col-md-4 -->
+							  
+							  <div class="col-sm-6 col-md-4">
+							    <div class="thumbnail">
+							    	<a class="catagotie-head" href="topup/freefire.php">
+										<img src="index_assets/images/icons/free_fire_icon.jpg" alt="...">
+										<h3>Free Fire (CUSTOM CARD)</h3>
 									</a>
 							    </div>	<!-- End of /.thumbnail -->
 						  	</div>	<!-- End of /.col-sm-6 col-md-4 -->

@@ -34,7 +34,7 @@
 			$row=mysqli_fetch_array($result);
 			$_SESSION['name']=$row[1];
 			$_SESSION['id']=$row[0];
-			$_SESSION['email']=$row[2];
+			$_SESSION['email']=$email;
 			$_SESSION['password']=$row[3];
 			header('location: index.php'); 					
 		}

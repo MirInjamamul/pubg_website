@@ -1,3 +1,16 @@
+<?php 
+	session_start();
+
+	if(!empty($_GET["dashboard"])) {
+		switch($_GET["dashboard"]) {
+			case 5 :
+				$_SESSION["email"] = null;
+				session_destroy();
+				header('location: index.php');
+				break;
+		}
+	}
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -41,26 +54,41 @@
 				<div class="col-md-7">
 					<p class="contact-action"><i class="fa fa-phone-square"></i>IN CASE OF ANY QUESTIONS, CALL THIS NUMBER: <strong>01304389568</strong></p>
 				</div>
-				<div class="col-md-3 clearfix">
-					<ul class="login-cart">
-						<li>
-							<a href="login.php">
-								<!--	<i class="fa fa-user"></i> -->
-								<img src="index_assets/images/icons/LoginImage.png">  Login
-							</a>
-						</li>
-					</ul>
-				</div>
-				<div class="col-md-2">
-					<div class="search-box">
-						<div class="input-group">
-					    	<!--<input placeholder="Search Here" type="text" class="form-control">
-					      	<span class="input-group-btn">
-					        	<button class="btn btn-default" type="button"></button>
-					      	</span> -->
-					    </div><!-- /.input-group -->
-					</div><!-- /.search-box -->
-				</div>
+
+				<?php 
+					if(!(isset($_SESSION['email']))){
+				?>
+						<div class="col-md-3 clearfix">
+							<ul class="login-cart">
+								<li>
+									<a href="login.php">
+										<!--	<i class="fa fa-user"></i> -->
+										<img src="index_assets/images/icons/LoginImage.png">  Login
+									</a>
+								</li>
+							</ul>
+						</div>
+				<?php		
+					}else{
+				?>
+						<div class="col-md-2">
+							<div class="search-box">
+								<div class="input-group">
+									<ul class="login-cart">
+										<li>
+											<a data-toggle="modal" data-target="#myModal" href="#">
+												<img src="index_assets/images/icons/LoginImage.png">Welcome <?php echo $_SESSION["name"] ?>
+											</a>
+										</li>
+									</ul>
+					    		</div><!-- /.input-group -->
+							</div><!-- /.search-box -->
+						</div>
+				<?php
+					}
+				?>
+				
+				
 			</div> <!-- End Of /.row -->
 		</div>	<!-- End Of /.Container -->
 
@@ -73,46 +101,16 @@
 		    	<div class="modal-content">
 		    		<div class="modal-header">
 		        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		        		<h4 class="modal-title" id="myModalLabel">Introduce Yourself</h4>
+		        		<h4 class="modal-title" id="myModalLabel">USER DASHBOARD</h4>
 		      		</div>
 			      	<div class="modal-body clearfix">
-
 						<form action="#" method="post" id="create-account_form" class="std">
 							<fieldset>
-								<h3>Create your account</h3>
-								<div class="form_content clearfix">
-									<h4>Enter your e-mail address to create an account.</h4>
-									<p class="text">
-										<label for="email_create">E-mail address</label>
-										<span>
-											<input placeholder="E-mail address"  type="text" id="email_create" name="email_create" value="" class="account_input">
-					                    </span>
-									</p>
-									<p class="submit">
-										<button class="btn btn-primary">Create Your Account</button>
-									</p>
-								</div>
-							</fieldset>
-						</form>
-			      		<form action="" method="post" id="login_form" class="std">
-							<fieldset>
-								<h3>Already registered?</h3>
-								<div class="form_content clearfix">
-									<p class="text">
-									<label for="email">E-mail address</label>
-										<span><input placeholder="E-mail address" type="text" id="email" name="email" value="" class="account_input"></span>
-									</p>
-									<p class="text">
-									<label for="passwd">Password</label>
-										<span><input placeholder="Password" type="password" id="passwd" name="passwd" value="" class="account_input"></span>
-									</p>
-									<p class="lost_password">
-										<a href="#popab-password-reset" class="popab-password-link">Forgot your password?</a>
-									</p>
-									<p class="submit">
-										<button class="btn btn-success">Log in</button>
-									</p>
-								</div>
+								<a href="userAccount.php"><h3>My Account</h3></a>
+								<a href="userOrder.php"><h3>My Order</h3></a>
+								<h3>My Wallet</h3>
+								<h3>Settings</h3>
+								<a href="index.php?dashboard=5"><h3>Logout</h3></a>
 							</fieldset>
 						</form>
 			      	</div>
@@ -161,12 +159,12 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav nav-main">
-						<li class="active"><a href="index.html">HOME</a></li>
+						<li class="active"><a href="#">HOME</a></li>
 						<li class=""><a href="topup.php">TOP-UP</a></li>
-						<li><a href="#">SHOP</a></li>
-						<li><a href="#">CUSTOM PRACTICE</a></li>
-						<li><a href="#">LEADERBOARD</a></li>
-						<li><a href="#">CONTACT US</a></li>
+						<li><a href="shop.php">SHOP</a></li>
+						<li><a href="customPractice.php">CUSTOM PRACTICE</a></li>
+						<li><a href="leaderBoard.php">LEADERBOARD</a></li>
+						<li><a href="contactUs.php">CONTACT US</a></li>
 					</ul> <!-- End of /.nav-main -->
 			</div>	<!-- /.navbar-collapse -->
 	</div>	<!-- /.container-fluid -->
@@ -223,9 +221,27 @@
 
 						  	<div class="col-sm-6 col-md-4">
 							    <div class="thumbnail">
-							    	<a class="catagotie-head" href="topup/freefire.php">
+							    	<a class="catagotie-head" href="topup/freefire_in_game.php">
 										<img src="index_assets/images/icons/free_fire_icon.jpg" alt="...">
-										<h3>Free Fire</h3>
+										<h3>Free Fire (IN GAME)</h3>
+									</a>
+							    </div>	<!-- End of /.thumbnail -->
+							  </div>	<!-- End of /.col-sm-6 col-md-4 -->
+							  
+							  <div class="col-sm-6 col-md-4">
+							    <div class="thumbnail">
+							    	<a class="catagotie-head" href="topup/freefire_promo.php">
+										<img src="index_assets/images/icons/free_fire_icon.jpg" alt="...">
+										<h3>Free Fire (PROMO)</h3>
+									</a>
+							    </div>	<!-- End of /.thumbnail -->
+							  </div>	<!-- End of /.col-sm-6 col-md-4 -->
+							  
+							  <div class="col-sm-6 col-md-4">
+							    <div class="thumbnail">
+							    	<a class="catagotie-head" href="topup/freefire_custom_card.php">
+										<img src="index_assets/images/icons/free_fire_icon.jpg" alt="...">
+										<h3>Free Fire (CUSTOM CARD)</h3>
 									</a>
 							    </div>	<!-- End of /.thumbnail -->
 						  	</div>	<!-- End of /.col-sm-6 col-md-4 -->

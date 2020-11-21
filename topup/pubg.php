@@ -1,57 +1,16 @@
-<?php
-session_start();
-require_once("dbcontroller.php");
-$db_handle = new DBController();
-if(!empty($_GET["action"])) {
-switch($_GET["action"]) {
-	case "add":
-		if(!empty($_POST["quantity"])) {
-			$productByCode = $db_handle->runQuery("SELECT * FROM tblproduct WHERE code='" . $_GET["code"] . "'");
-			$itemArray = array($productByCode[0]["code"]=>array('name'=>$productByCode[0]["name"], 'code'=>$productByCode[0]["code"], 'quantity'=>$_POST["quantity"], 'price'=>$productByCode[0]["price"], 'image'=>$productByCode[0]["image"]));
-			
-			if(!empty($_SESSION["cart_item"])) {
-				if(in_array($productByCode[0]["code"],array_keys($_SESSION["cart_item"]))) {
-					foreach($_SESSION["cart_item"] as $k => $v) {
-							if($productByCode[0]["code"] == $k) {
-								if(empty($_SESSION["cart_item"][$k]["quantity"])) {
-									$_SESSION["cart_item"][$k]["quantity"] = 0;
-								}
-								$_SESSION["cart_item"][$k]["quantity"] += $_POST["quantity"];
-							}
-					}
-				} else {
-					$_SESSION["cart_item"] = array_merge($_SESSION["cart_item"],$itemArray);
-				}
-			} else {
-				$_SESSION["cart_item"] = $itemArray;
-			}
-		}
-	break;
-	case "remove":
-		if(!empty($_SESSION["cart_item"])) {
-			foreach($_SESSION["cart_item"] as $k => $v) {
-					if($_GET["code"] == $k)
-						unset($_SESSION["cart_item"][$k]);				
-					if(empty($_SESSION["cart_item"]))
-						unset($_SESSION["cart_item"]);
-			}
-		}
-	break;
-	case "empty":
-		unset($_SESSION["cart_item"]);
-	break;	
-}
-}
-?>
+<?php 
+	session_start();
 
+	require_once("dbcontroller.php");
+    $db_handle = new DBController();
+    
+?>
 <!doctype html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<title>Welcome | GoGarena</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    
-    <link href="shopping_assets/style.css" type="text/css" rel="stylesheet" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 	<!-- Fonts -->
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
@@ -60,13 +19,11 @@ switch($_GET["action"]) {
 	<!-- Css -->
 	<link rel="stylesheet" href="../index_assets/css/nivo-slider.css" type="text/css" />
 	<link rel="stylesheet" href="../index_assets/css/owl.carousel.css">
-	<link rel="stylesheet" href="./index_assets/css/owl.theme.css">
+	<link rel="stylesheet" href="../index_assets/css/owl.theme.css">
 	<link rel="stylesheet" href="../index_assets/css/bootstrap.min.css">
 	<link rel="stylesheet" href="../index_assets/css/font-awesome.min.css">
 	<link rel="stylesheet" href="../index_assets/css/style.css">
-    <link rel="stylesheet" href="../index_assets/css/responsive.css">
-    
-    
+	<link rel="stylesheet" href="../index_assets/css/responsive.css">
 
 	<!-- jS -->
 	<script src="../index_assets/js/jquery.min.js" type="text/javascript"></script>
@@ -91,26 +48,41 @@ switch($_GET["action"]) {
 				<div class="col-md-7">
 					<p class="contact-action"><i class="fa fa-phone-square"></i>IN CASE OF ANY QUESTIONS, CALL THIS NUMBER: <strong>01304389568</strong></p>
 				</div>
-				<div class="col-md-3 clearfix">
-					<ul class="login-cart">
-						<li>
-							<a href="login.php">
-								<!--	<i class="fa fa-user"></i> -->
-								<img src="../index_assets/images/icons/LoginImage.png">  Login
-							</a>
-						</li>
-					</ul>
-				</div>
-				<div class="col-md-2">
-					<div class="search-box">
-						<div class="input-group">
-					    	<!--<input placeholder="Search Here" type="text" class="form-control">
-					      	<span class="input-group-btn">
-					        	<button class="btn btn-default" type="button"></button>
-					      	</span> -->
-					    </div><!-- /.input-group -->
-					</div><!-- /.search-box -->
-				</div>
+
+				<?php 
+					if(!(isset($_SESSION['email']))){
+				?>
+						<div class="col-md-3 clearfix">
+							<ul class="login-cart">
+								<li>
+									<a href="login.php">
+										<!--	<i class="fa fa-user"></i> -->
+										<img src="../index_assets/images/icons/LoginImage.png">  Login
+									</a>
+								</li>
+							</ul>
+						</div>
+				<?php		
+					}else{
+				?>
+						<div class="col-md-2">
+							<div class="search-box">
+								<div class="input-group">
+									<ul class="login-cart">
+										<li>
+											<a data-toggle="modal" data-target="#myModal" href="#">
+												<img src="../index_assets/images/icons/LoginImage.png">Welcome <?php echo $_SESSION["name"] ?>
+											</a>
+										</li>
+									</ul>
+					    		</div><!-- /.input-group -->
+							</div><!-- /.search-box -->
+						</div>
+				<?php
+					}
+				?>
+				
+				
 			</div> <!-- End Of /.row -->
 		</div>	<!-- End Of /.Container -->
 
@@ -123,46 +95,16 @@ switch($_GET["action"]) {
 		    	<div class="modal-content">
 		    		<div class="modal-header">
 		        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		        		<h4 class="modal-title" id="myModalLabel">Introduce Yourself</h4>
+		        		<h4 class="modal-title" id="myModalLabel">USER DASHBOARD</h4>
 		      		</div>
 			      	<div class="modal-body clearfix">
-
 						<form action="#" method="post" id="create-account_form" class="std">
 							<fieldset>
-								<h3>Create your account</h3>
-								<div class="form_content clearfix">
-									<h4>Enter your e-mail address to create an account.</h4>
-									<p class="text">
-										<label for="email_create">E-mail address</label>
-										<span>
-											<input placeholder="E-mail address"  type="text" id="email_create" name="email_create" value="" class="account_input">
-					                    </span>
-									</p>
-									<p class="submit">
-										<button class="btn btn-primary">Create Your Account</button>
-									</p>
-								</div>
-							</fieldset>
-						</form>
-			      		<form action="" method="post" id="login_form" class="std">
-							<fieldset>
-								<h3>Already registered?</h3>
-								<div class="form_content clearfix">
-									<p class="text">
-									<label for="email">E-mail address</label>
-										<span><input placeholder="E-mail address" type="text" id="email" name="email" value="" class="account_input"></span>
-									</p>
-									<p class="text">
-									<label for="passwd">Password</label>
-										<span><input placeholder="Password" type="password" id="passwd" name="passwd" value="" class="account_input"></span>
-									</p>
-									<p class="lost_password">
-										<a href="#popab-password-reset" class="popab-password-link">Forgot your password?</a>
-									</p>
-									<p class="submit">
-										<button class="btn btn-success">Log in</button>
-									</p>
-								</div>
+								<a href="userAccount.php"><h3>My Account</h3></a>
+								<a href="userOrder.php"><h3>My Order</h3></a>
+								<h3>My Wallet</h3>
+								<h3>Settings</h3>
+								<a href="index.php?dashboard=5"><h3>Logout</h3></a>
 							</fieldset>
 						</form>
 			      	</div>
@@ -211,8 +153,8 @@ switch($_GET["action"]) {
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav nav-main">
-                    <li class=""><a href="index.html">HOME</a></li>
-						<li class="active"><a href="topup.php">TOP-UP</a></li>
+						<li class="active"><a href="index.html">HOME</a></li>
+						<li class=""><a href="topup.php">TOP-UP</a></li>
 						<li><a href="#">SHOP</a></li>
 						<li><a href="#">CUSTOM PRACTICE</a></li>
 						<li><a href="#">LEADERBOARD</a></li>
@@ -234,110 +176,53 @@ switch($_GET["action"]) {
 		</div>	<!-- End of /.container -->
 	</section>	<!-- End of section -->
 
-
-
-	<!--Good Health CATAGORIE Start
+	
+		<!-- PRODUCTS Start
     ================================================== -->
 
-	<section id="catagorie">
+	<section id="products">
 		<div class="container">
 			<div class="row">
-                <div id="shopping-cart">
-                    <div class="txt-heading">Shopping Cart</div>
+				<div class="col-md-12">
+					<div class="products-heading">
+						<h2>COD MOBILE</h2>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+                <?php
+					$product_array = $db_handle->runQuery("SELECT * FROM tblproduct WHERE code = 'pubg' ORDER BY id ASC");
 
-                    <a id="btnEmpty" href="pubg.php?action=empty">Empty Cart</a>
-                    <?php
-                        if(isset($_SESSION["cart_item"])){
-                            $total_quantity = 0;
-                            $total_price = 0;
-                    ?>	
-                    <table class="tbl-cart" cellpadding="10" cellspacing="1">
-                        <tbody>
-                            <tr>
-                            <th style="text-align:left;">Name</th>
-                            <th style="text-align:left;">Code</th>
-                            <th style="text-align:right;" width="5%">Quantity</th>
-                            <th style="text-align:right;" width="10%">Unit Price</th>
-                            <th style="text-align:right;" width="10%">Price</th>
-                            <th style="text-align:center;" width="5%">Remove</th>
-                            </tr>	
-                    <?php		
-                        foreach ($_SESSION["cart_item"] as $item){
-                            $item_price = $item["quantity"]*$item["price"];
-                            ?>
-                                    <tr>
-                                    <td><img src="<?php echo $item["image"]; ?>" class="cart-item-image" /><?php echo $item["name"]; ?></td>
-                                    <td><?php echo $item["code"]; ?></td>
-                                    <td style="text-align:right;"><?php echo $item["quantity"]; ?></td>
-                                    <td  style="text-align:right;"><?php echo "$ ".$item["price"]; ?></td>
-                                    <td  style="text-align:right;"><?php echo "$ ". number_format($item_price,2); ?></td>
-                                    <td style="text-align:center;"><a href="pubg.php?action=remove&code=<?php echo $item["code"]; ?>" class="btnRemoveAction"><img src="icon-delete.png" alt="Remove Item" /></a></td>
-                                    </tr>
-                                    <?php
-                                    $total_quantity += $item["quantity"];
-                                    $total_price += ($item["price"]*$item["quantity"]);
-                            }
-                            ?>
+					if (!empty($product_array)) { 
+						foreach($product_array as $key=>$value){
+				?>
 
-                    <tr>
-                    <td colspan="2" align="right">Total:</td>
-                    <td align="right"><?php echo $total_quantity; ?></td>
-                    <td align="right" colspan="2"><strong><?php echo "$ ".number_format($total_price, 2); ?></strong></td>
-                    <td></td>
-                    </tr>
-                    </tbody>
-                    </table>		
-                    <?php
-                    } else {
-                    ?>
-                    <div class="no-records">Your Cart is Empty</div>
-                    <?php 
-                    }
-                    ?>
-                    </div>
+				<div class="col-md-3">
+					<div class="products">
+						<a href="single-product.html">
+							<img src="images/product-image.jpg" alt="">
+						</a>
+						<a href="single-product.html">
+							<h4><?php echo $product_array[$key]["name"]; ?></h4>
+						</a>
+						<p class="price"><?php echo "$".$product_array[$key]["price"]; ?></p>
+						<a class="view-link shutter" href="#">
+							<i class="#"></i>BUY</a>
+					</div>	<!-- End of /.products -->
+				</div>	<!-- End of /.col-md-3 -->
+                <?php
+									}
+								}
 
-                    <div id="product-grid">
-                        <div class="txt-heading">Products</div>
-                        <?php
-                        $product_array = $db_handle->runQuery("SELECT * FROM tblproduct WHERE code = 'pubg' ORDER BY id ASC");
-                        if (!empty($product_array)) { 
-                            foreach($product_array as $key=>$value){
-                        ?>
-                            <div class="product-item">
-                                <form method="post" action="pubg.php?action=add&code=<?php echo $product_array[$key]["code"]; ?>">
-                                <div class="product-image"><img src="<?php echo $product_array[$key]["image"]; ?>"></div>
-                                <div class="product-tile-footer">
-                                <div class="product-title"><?php echo $product_array[$key]["name"]; ?></div>
-                                <div class="product-price"><?php echo "$".$product_array[$key]["price"]; ?></div>
-                                <div class="cart-action"><input type="text" class="product-quantity" name="quantity" value="1" size="2" /><input type="submit" value="Add to Cart" class="btnAddAction" /></div>
-                                </div>
-                                </form>
-                            </div>
-                        <?php
-                            }
-                        }
-                        ?>
-                    </div>
+							?>
 			</div>	<!-- End of /.row -->
 		</div>	<!-- End of /.container -->
 	</section>	<!-- End of Section -->
 
-		<!-- CALL TO ACTION Start
-    ================================================== -->
 
-	<section id="call-to-area">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					 
-				</div>	<!-- End of /.col-md-12 -->
-			</div> <!-- End Of /.Row -->
-		</div> <!-- End Of /.Container -->
-	</section>	<!-- End of Section -->
-
-
-
-	<!-- FOOTER Start
+	
+	
+<!-- FOOTER Start
     ================================================== -->
 
 	<footer>

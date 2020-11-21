@@ -1,6 +1,9 @@
 <?php 
     include_once 'database.php';
 
+    session_start();
+    
+
     if(isset($_POST['addProduct']))
 	{	
 		$product_name = $_POST['product_name'];
@@ -17,15 +20,15 @@
         
         $image = null ;
 
-		if($code=="freefire"){
-            $image = "product_images/free_fire.jpg";
-        }else if($code=="pubg"){
-            $image = "product_images/freefire.jpg";
-        }else if($code=="cod"){
-            $image = "product_images/cod.jpg";
-        }else if($code=="coc"){
-            $image = "product_images/coc.jpg";
-        }
+		if($code=="freefire(in_game)" || $code=="freefire(promo)" || $code == "freefire(custom_card)"){
+        $image = "product_images/free_fire.jpg";
+    }else if($code=="pubg"){
+        $image = "product_images/freefire.jpg";
+    }else if($code=="cod"){
+        $image = "product_images/cod.jpg";
+    }else if($code=="coc"){
+         $image = "product_images/coc.jpg";
+    }
 
         $str="insert into tblproduct set name='$product_name',code='$code',image='$image',price='$product_price'";
 				if((mysqli_query($con,$str)))	
@@ -42,7 +45,7 @@
   <link rel="icon" type="image/png" href="./assets/img/favicon.png">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>
-  Dashboard | Dark | Admin Panel
+      Dashboard | Dark | Admin Panel
   </title>
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
   <!--     Fonts and icons     -->
@@ -215,7 +218,9 @@
                         <div class="form-group">
                           <label class="bmd-label-floating">Select list</label>
                                 <select class="form-control" id = "myList" name="code">
-                                <option value = "freefire">Free Fire</option>
+                                <option value = "freefire(in_game)">Free Fire(In Game)</option>
+                                <option value = "freefire(promo)">Free Fire(PROMO)</option>
+                                <option value = "freefire(custom_card)">Free Fire(Custom Card)</option>
                                 <option value = "pubg">Pubg</option>
                                 <option value = "cod">Call Of Duty</option>
                                 <option value = "coc">Clash Of Clan</option>
@@ -312,28 +317,7 @@
       <footer class="footer">
         <div class="container-fluid">
           <nav class="float-left">
-            <ul>
-              <li>
-                <a href="https://www.creative-tim.com">
-                  Creative Tim
-                </a>
-              </li>
-              <li>
-                <a href="https://creative-tim.com/presentation">
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href="http://blog.creative-tim.com">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="https://www.creative-tim.com/license">
-                  Licenses
-                </a>
-              </li>
-            </ul>
+            
           </nav>
           <div class="copyright float-right" id="date">
             , Copyright by <i class="material-icons">favorite</i> by
